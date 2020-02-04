@@ -19,10 +19,11 @@ Movie2 does require:
 
 from __future__ import division
 
-from psychopy import visual, core, event
+from psychopy import visual, core, event, parallel
 import time, os
-
 from psychopy.constants import (NOT_STARTED, STARTED, PLAYING, PAUSED, STOPPED, FINISHED, PRESSED, RELEASED, FOREVER)
+
+parallel_port = parallel.ParallelPort(address=0xD010) # TMS box address = D010?
 
 videopath = r'./jwpIntro.mov'
 videopath = os.path.join(os.getcwd(), videopath)
@@ -32,31 +33,32 @@ if not os.path.exists(videopath):
 win = visual.Window([1024, 768])
 
 # Create your movie stim.
-mov = visual.MovieStim2(win, videopath,
-    size=640,
-    # pos specifies the /center/ of the movie stim location
-    pos=[0, 100],
-    flipVert=False, flipHoriz=False,
-    loop=False)
+mov = visual.MovieStim2(win, 
+                        videopath,
+                        size=640,
+                        # pos specifies the /center/ of the movie stim location
+                        pos=[0, 0],
+                        flipVert=False, flipHoriz=False,
+                        loop=False)
 
-keystext = "PRESS 'q' or 'escape' to Quit.\n"
-keystext += "  #     's': Stop/restart Movie.\n"
-keystext += "  #     'p': Pause/Unpause Movie.\n"
-keystext += "  #     '>': Seek Forward 1 Second.\n"
-keystext += "  #     '<': Seek Backward 1 Second.\n"
-keystext += "  #     '-': Decrease Movie Volume.\n"
-keystext += "  #     '+': Increase Movie Volume."
-text = visual.TextStim(win, keystext, pos=(0, -250), units = 'pix')
+# Start the countdown
+timer_started = False
 
 # Start the movie stim by preparing it to play
 shouldflip = mov.play()
 while mov.status != FINISHED:
+
+    # Start the timer unless it has been started previously
+    if not timer_started:
+        timer = core.CountdownTimer(4) # in seconds
+        timer_started = True
+        parallel_port.setData(0) # send a zero at the start of each movie
+
     # Only flip when a new frame should be displayed. Can significantly reduce
     # CPU usage. This only makes sense if the movie is the only /dynamic/ stim
     # displayed.
     if shouldflip:
-        # Movie has already been drawn , so just draw text stim and flip
-        text.draw()
+        # Movie has already been drawn , so just flip
         win.flip()
     else:
         # Give the OS a break if a flip is not needed
@@ -65,53 +67,9 @@ while mov.status != FINISHED:
     # is handled internally.
     shouldflip = mov.draw()
 
-    # Check for action keys.....
-    for key in event.getKeys():
-        if key in ['escape', 'q']:
-            win.close()
-            core.quit()
-        elif key in ['s', ]:
-            if mov.status in [PLAYING, PAUSED]:
-                # To stop the movie being played.....
-                mov.stop()
-                # Clear screen of last displayed frame.
-                win.flip()
-                # When movie stops, clear screen of last displayed frame,
-                # and display text stim only....
-                text.draw()
-                win.flip()
-            else:
-                # To replay a movie that was stopped.....
-                mov.loadMovie(videopath)
-                shouldflip = mov.play()
-        elif key in ['p', ]:
-            # To pause the movie while it is playing....
-            if mov.status == PLAYING:
-                mov.pause()
-            elif mov.status == PAUSED:
-                # To /unpause/ the movie if pause has been called....
-                mov.play()
-                text.draw()
-                win.flip()
-        elif key == 'period':
-            # To skip ahead 1 second in movie.
-            ntime = min(mov.getCurrentFrameTime() + 1.0, mov.duration)
-            mov.seek(ntime)
-        elif key == 'comma':
-            # To skip back 1 second in movie ....
-            ntime = max(mov.getCurrentFrameTime() - 1.0, 0.0)
-            mov.seek(ntime)
-        elif key == 'minus':
-            # To decrease movie sound a bit ....
-            cv = max(mov.getVolume() - 5, 0)
-            mov.setVolume(cv)
-        elif key == 'equal':
-            # To increase movie sound a bit ....
-            cv = mov.getVolume()
-            cv = min(mov.getVolume() + 5, 100)
-            mov.setVolume(cv)
+    # Check for countdown has elapsed
+    if timer.getTime() < 0:
+        parallel_port.setData(1) # send a one to the TMS machine to make it send a pulse
 
 win.close()
 core.quit()
-
-# The contents of this file are in the public domain.
