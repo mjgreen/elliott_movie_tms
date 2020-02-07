@@ -2,9 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b537d2cb-f922-41e6-bc20-3d310c8c806d" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/parallelPortOutput.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/query_par.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dictionaries/matt.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/preliminaries.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jwpIntro.mov" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,6 +32,8 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="com.intellij.ide.scratch.LRUPopupBuilder$1/New Scratch File" value="Python" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
@@ -52,10 +56,10 @@
     <servers />
   </component>
   <component name="WindowStateProjectService">
-    <state x="555" y="215" width="800" height="675" key="#Inspections" timestamp="1580638471593">
+    <state x="555" y="215" width="800" height="675" key="#Inspections" timestamp="1581037948338">
       <screen x="0" y="28" width="1920" height="1052" />
     </state>
-    <state x="555" y="215" width="800" height="675" key="#Inspections/0.28.1920.1052@0.28.1920.1052" timestamp="1580638471593" />
+    <state x="555" y="215" width="800" height="675" key="#Inspections/0.28.1920.1052@0.28.1920.1052" timestamp="1581037948338" />
     <state x="743" y="312" width="424" height="482" key="FileChooserDialogImpl" timestamp="1580890542841">
       <screen x="0" y="28" width="1920" height="1052" />
     </state>
