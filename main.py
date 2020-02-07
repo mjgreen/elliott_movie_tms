@@ -14,7 +14,7 @@ sudo pacman -S hdf5
     *operating system* is 64/32 bit. http: //www.videolan.org/vlc/index.html
 
 sudo pacman -S vlc
-
+pip install python-vlc
 """
 
 from __future__ import division
@@ -24,8 +24,9 @@ import time, os, sys, subprocess
 from psychopy.constants import (NOT_STARTED, STARTED, PLAYING, PAUSED, STOPPED, FINISHED, PRESSED, RELEASED, FOREVER)
 
 
-def pingTMS():
+def pingTMS(ping_at):
     port.setData(1)  # send a one to the TMS machine to make it send a pulse
+    print("\nping with {} milliseconds on the timer\n".format(round(ping_at*1000, 6)))
 
 def pingDummy(ping_at):
     print("ping {} seconds after the timer elapsed".format(round(ping_at, 6)))
@@ -78,9 +79,10 @@ while mov.status != FINISHED:
         timer_started = True
 
     # Check whether countdown has elapsed
-    if timer.getTime() < 0 and timer_finished is False:
+    if timer.getTime() < 0.0025 and timer_finished is False:
         if port is not "dummy_port":
-            pingTMS()
+            ping_time = timer.getTime()
+            pingTMS(ping_at=ping_time)
             timer_finished = True
         if port is "dummy_port":
             ping_time = timer.getTime()
